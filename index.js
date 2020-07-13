@@ -1,39 +1,33 @@
-const select = document.getElementById('breeds');
-const dogPic = document.querySelector('.dogPic');
-const form = document.querySelector('form');
+/* eslint-disable no-undef */
+'use strict';
 
-
-function getDoggo() {
-
-    fetch("https://dog.ceo/api/breeds/image/random")
-        .then(response => {
-            console.log(response);
-            return response.json();
-        }).then(jsonData => grabImage(jsonData))
-        .catch(error => console.log(error))
+function getDogImage() {
+  fetch('https://dog.ceo/api/breeds/image/random/search?q=lab&limit=25')
+  //http://api.giphy.com/v1/gifs/search?q=batman&limit=25
+    .then(response => response.json( ))
+    .then(responseJson => 
+      displayResults(responseJson))
+    .catch(error => alert('Something went wrong. Try again later.'));
 }
 
-function grabImage(jsonData) {
-    const html = `
-    <img src '${jsonData}' alt>
-    <p>See pics of ${select.value}s</p>
-    `
-    dogPic.innerHTML = html;
+function displayResults(responseJson) {
+  console.log(responseJson);
+  //replace the existing image with the new one
+  $('.results-img').replaceWith(
+    `<img src="${responseJson.message}" class="results-img">`
+  ),
+  //display the results section
+  $('.results').removeClass('hidden');
 }
 
-const displayImage = () => {
-    const form = `
-    <h1>Enter number of dog images:</h1>
-    <form>
-      <input required type="text" id="img-count" name="number">
-      <label for="img-count">Number ofimages</label>
-      autofocus ="on" maxlength="2" required>
-      <button type="submit" class="enter">Enter</button>
-    </form>
-    `
-    $('main').html(html)
-  };
+function watchForm() {
+  $('form').submit(event => {
+    event.preventDefault();
+    getDogImage();
+  });
+}
 
-
-
-  $(getDoggo);
+$(function() {
+  console.log('App loaded! Waiting for submit!');
+  watchForm();
+});
